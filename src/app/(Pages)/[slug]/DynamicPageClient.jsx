@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 const DynamicPageClient = ({ data }) => {
@@ -24,6 +26,8 @@ const DynamicPageClient = ({ data }) => {
         {/* CONTENT */}
         {components.map((item, index) => {
           const isEven = index % 2 === 0;
+          const isFirstBlock = index === 0;
+
           const imageUrl = item?.attachment
             ? `${baseUrl}${item.attachment}`
             : null;
@@ -40,6 +44,8 @@ const DynamicPageClient = ({ data }) => {
                     src={imageUrl}
                     alt={item.file_alt || "image"}
                     fill
+                    priority={isFirstBlock} // ✅ LCP FIX
+                    loading={isFirstBlock ? "eager" : "lazy"} // ✅ smart loading
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover rounded-lg"
                   />
@@ -61,8 +67,8 @@ const DynamicPageClient = ({ data }) => {
                     src={imageUrl}
                     alt={item.file_alt || "image"}
                     fill
-                    quality={40}
-                    loading="lazy"
+                    priority={isFirstBlock} // ✅ LCP FIX
+                    loading={isFirstBlock ? "eager" : "lazy"}
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover rounded-lg"
                   />
