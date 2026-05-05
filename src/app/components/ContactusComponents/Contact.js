@@ -5,22 +5,10 @@ import { useRouter } from "next/navigation";
 import { RiPhoneLine, RiMapPinFill } from "react-icons/ri";
 import { MdEmail } from "react-icons/md";
 import Image from "next/image";
-import { useGetAreasQuery, useGetDomainsQuery } from "@/app/services/wrirkda";
 
-const Contact = ({ data }) => {
+const Contact = ({ data, areas = [], domains = [] }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
-  // ✅ API Calls
-  const { data: areasData, isLoading: areasLoading, isError: areasError } =
-    useGetAreasQuery();
-
-  const { data: domainsData, isLoading: domainsLoading, isError: domainsError } =
-    useGetDomainsQuery();
-
-  // ✅ Simple (no unnecessary useMemo)
-  const areas = areasData || [];
-  const domains = domainsData || [];
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -35,14 +23,13 @@ const Contact = ({ data }) => {
   // ✅ Change handler
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  // ✅ Filter domains
+  // ✅ Filter domains (same logic)
   const filteredDomains = domains.filter(
     (d) => d?.research_area?.slug === formData.research_area
   );
@@ -50,7 +37,6 @@ const Contact = ({ data }) => {
   // ✅ Area change
   const handleAreaChange = useCallback((e) => {
     const value = e.target.value;
-
     setFormData((prev) => ({
       ...prev,
       research_area: value,
@@ -58,7 +44,7 @@ const Contact = ({ data }) => {
     }));
   }, []);
 
-  // ✅ Submit
+  // ✅ Submit (same)
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
@@ -88,23 +74,7 @@ const Contact = ({ data }) => {
     [formData, router]
   );
 
-  // ✅ Loading
-  if (areasLoading || domainsLoading) {
-    return (
-      <div className="text-center py-20 text-gray-500">
-        Loading form...
-      </div>
-    );
-  }
-
-  // ✅ Error
-  if (areasError || domainsError) {
-    return (
-      <div className="text-center py-20 text-red-500">
-        Failed to load data
-      </div>
-    );
-  }
+  // ❌ REMOVED loading + error block (IMPORTANT)
 
   return (
     <div>
@@ -157,8 +127,8 @@ const Contact = ({ data }) => {
                 src="/Images/contact-elli.avif"
                 alt="contact"
                 loading="lazy"
-                sizes="(max-width: 768px) 100vw, 300px" // 🔥 important
-                quality={70} // 🔥 optimized
+                sizes="(max-width: 768px) 100vw, 300px"
+                quality={70}
               />
             </div>
 
@@ -170,6 +140,7 @@ const Contact = ({ data }) => {
 
           <form onSubmit={handleSubmit}>
 
+            {/* SAME UI (unchanged) */}
             {/* NAME */}
             <div className="grid lg:grid-cols-2 gap-x-7">
               <div className="mb-4 p-2">

@@ -1,13 +1,18 @@
 import { Suspense, cache } from "react";
 import { fetchSeo } from "@/app/lib/seo";
+import { fetchAreas, fetchDomains } from "@/app/lib/contactApi";
 import { mapSeoToMetadata } from "@/app/lib/seoMapper";
 import ContactClient from "./ContactClient";
 import ContactSkeleton from "./ContactSkeleton";
 
-// ✅ Cache API (avoid duplicate calls)
+// ✅ Cache SEO
 const getContactData = cache(async () => {
   return fetchSeo("contact-us");
 });
+
+// ✅ Cache APIs (same pattern)
+const getAreas = cache(fetchAreas);
+const getDomains = cache(fetchDomains);
 
 // ✅ Metadata
 export async function generateMetadata() {
@@ -15,7 +20,7 @@ export async function generateMetadata() {
   return mapSeoToMetadata(data?.seo);
 }
 
-// ✅ Page with Suspense
+// ✅ Page
 export default function ContactUsPage() {
   return (
     <Suspense fallback={<ContactSkeleton />}>
@@ -24,14 +29,18 @@ export default function ContactUsPage() {
   );
 }
 
-// ✅ Server Data Layer
+// ✅ Server layer
 async function ContactData() {
-  const data = await getContactData();
-  const schema = data?.seo?.schema_json;
+  const [seoData, areas, domains] = await Promise.all([
+    getContactData(),
+    getAreas(),
+    getDomains(),
+  ]);
+
+  const schema = seoData?.seo?.schema_json;
 
   return (
     <>
-      {/* ✅ Schema JSON */}
       {schema && Object.keys(schema).length > 0 && (
         <script
           type="application/ld+json"
@@ -41,8 +50,11 @@ async function ContactData() {
         />
       )}
 
-      {/* ✅ Clean props */}
-      <ContactClient data={data} />
+      <ContactClient
+        data={seoData}
+        areas={areas}
+        domains={domains}
+      />
     </>
   );
 }

@@ -1,10 +1,7 @@
-"use client";
-
-import React, { memo } from "react";
 import Hero from "@/app/components/ContactusComponents/Hero";
 
-const ContactClient = ({ data }) => {
-  return <Hero data={data} />;
+const ContactClient = ({ data, areas, domains }) => {
+  return <Hero data={data} areas={areas} domains={domains} />;
 };
 
-export default memo(ContactClient);
+export default ContactClient;
