@@ -72,7 +72,7 @@ const Hero = ({ data }) => {
               width={600}
               height={600}
               priority
-              quality={50} // 🔥 reduce size
+              quality={70} // 🔥 reduce size
               sizes="(max-width: 1024px) 100vw, 65vw" // 🔥 VERY IMPORTANT
               className="w-full lg:w-[65vw] lg:h-[32vw] object-cover"
             />

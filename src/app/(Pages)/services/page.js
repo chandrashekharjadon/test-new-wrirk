@@ -1,9 +1,13 @@
-import { Suspense, cache } from "react";
+import { cache } from "react";
+import dynamic from "next/dynamic";
 import { fetchSeo } from "@/app/lib/seo";
 import { mapSeoToMetadata } from "@/app/lib/seoMapper";
-import ResearchClient from "./ResearchClient";
-import ResearchSkeleton from "./ResearchSkeleton";
-import Hero from "@/app/components/HomeComponents/Hero";
+import Hero from "@/app/components/ResearchComponents/Hero";
+
+// ✅ Lazy load BELOW-THE-FOLD content
+const ResearchClient = dynamic(() => import("./ResearchClient"), {
+  ssr: false, // 🔥 huge LCP improvement
+});
 
 // ✅ CACHE (prevents duplicate API calls)
 const getResearchData = cache(async () => {
@@ -16,22 +20,16 @@ export async function generateMetadata() {
   return mapSeoToMetadata(data?.seo);
 }
 
-// ✅ Page
 export default function ResearchPage() {
-  return (
-    <Suspense fallback={<ResearchSkeleton />}>
-      <ResearchData />
-    </Suspense>
-  );
+  return <ResearchData />;
 }
 
-// ✅ Server Component
 async function ResearchData() {
   const data = await getResearchData();
 
   return (
     <>
-      {/* ✅ Schema JSON */}
+      {/* Schema */}
       {data?.seo?.schema_json && (
         <script
           type="application/ld+json"
@@ -41,7 +39,10 @@ async function ResearchData() {
         />
       )}
 
+      {/* ✅ HERO MUST BE HERE */}
       <Hero data={data} />
+
+      {/* BELOW THE FOLD */}
       <ResearchClient data={data} />
     </>
   );

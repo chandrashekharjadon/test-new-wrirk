@@ -1,14 +1,13 @@
-import React from "react";
-// import Hero from "@/app/components/ResearchComponents/Hero";
+"use client";
+
+import Hero from "@/app/components/HomeComponents/Hero";
 import ResearchCardContainer from "@/app/components/ResearchComponents/ResearchCardContainer";
 
 const ResearchClient = ({ data }) => {
-  const cards = data?.cards || [];
-
   return (
     <div>
       {/* <Hero data={data} /> */}
-      <ResearchCardContainer data={cards} />
+      <ResearchCardContainer data={data?.cards || []} />
     </div>
   );
 };
