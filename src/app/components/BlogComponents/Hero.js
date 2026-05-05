@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useCallback, memo } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -20,42 +20,33 @@ const Hero = ({ data }) => {
   }, [search]);
 
   /* ================= FILTER ================= */
-  const filteredCards = useMemo(() => {
-    if (!blogData?.blog_cards) return [];
-
-    if (!debouncedSearch) return blogData.blog_cards;
-
-    return blogData.blog_cards.filter((item) =>
-      item?.title?.toLowerCase().includes(debouncedSearch)
-    );
-  }, [debouncedSearch, blogData?.blog_cards]);
+  const filteredCards = !debouncedSearch
+    ? blogData.blog_cards || []
+    : (blogData.blog_cards || []).filter((item) =>
+        item?.title?.toLowerCase().includes(debouncedSearch)
+      );
 
   /* ================= HELPERS ================= */
-  const limitText = useCallback((text, limit = 140) => {
+  const limitText = (text, limit = 140) => {
     if (!text) return "";
     return text.length > limit ? text.slice(0, limit) + "..." : text;
-  }, []);
+  };
 
-  const formatDate = useCallback((date) => {
+  const formatDate = (date) => {
     if (!date) return "";
     return new Date(date).toLocaleDateString("en-IN", {
       day: "2-digit",
       month: "short",
       year: "numeric",
     });
-  }, []);
+  };
 
-  const formatCount = useCallback((num) => {
+  const formatCount = (num) => {
     if (!num) return 0;
     if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + "M";
     if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
     return num;
-  }, []);
-
-  /* ================= HANDLER ================= */
-  const handleSearch = useCallback((e) => {
-    setSearch(e.target.value);
-  }, []);
+  };
 
   return (
     <div className="bg-[#f4f4f4] pt-24">
@@ -73,7 +64,7 @@ const Hero = ({ data }) => {
               type="text"
               placeholder="Search"
               value={search}
-              onChange={handleSearch}
+              onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-xl border border-gray-200 px-4 py-2 pr-10 text-sm shadow-sm focus:border-gray-400 focus:outline-none"
             />
           </div>
@@ -83,7 +74,7 @@ const Hero = ({ data }) => {
 
         {/* CARDS */}
         {filteredCards.length > 0 ? (
-          filteredCards.map((item) => (
+          filteredCards.map((item, index) => (
             <Link key={item.id} href={`/Blog/${item.slug}`}>
               <div className="mt-6 mb-6 bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition cursor-pointer">
                 <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
@@ -115,7 +106,9 @@ const Hero = ({ data }) => {
                       alt={item?.image_alt || "image"}
                       width={224}
                       height={144}
-                      loading="lazy"
+                      priority={index === 0} // ✅ LCP FIX
+                      loading={index === 0 ? "eager" : "lazy"} // ✅ smart loading
+                      sizes="(max-width: 768px) 100vw, 224px" // ✅ optimization
                       className="rounded-xl object-cover"
                     />
                   </div>
@@ -134,4 +127,4 @@ const Hero = ({ data }) => {
   );
 };
 
-export default memo(Hero);
+export default Hero;
