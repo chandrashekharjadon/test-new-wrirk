@@ -3,6 +3,7 @@ import { fetchSeo } from "@/app/lib/seo";
 import { mapSeoToMetadata } from "@/app/lib/seoMapper";
 import ResearchClient from "./ResearchClient";
 import ResearchSkeleton from "./ResearchSkeleton";
+import Hero from "@/app/components/HomeComponents/Hero";
 
 // ✅ CACHE (prevents duplicate API calls)
 const getResearchData = cache(async () => {
@@ -40,6 +41,7 @@ async function ResearchData() {
         />
       )}
 
+      <Hero data={data} />
       <ResearchClient data={data} />
     </>
   );
