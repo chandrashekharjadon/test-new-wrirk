@@ -39,7 +39,7 @@ const Hero = ({ data }) => {
               height={600}
               priority
               sizes="(max-width: 1024px) 100vw, 50vw" // 🔥 CRITICAL FIX
-              quality={50} // 🔥 reduce payload
+              quality={60} // 🔥 reduce payload
               className="w-full h-auto object-cover rounded-lg shadow-lg"
             />
           )}

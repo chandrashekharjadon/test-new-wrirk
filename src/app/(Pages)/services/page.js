@@ -5,9 +5,7 @@ import { mapSeoToMetadata } from "@/app/lib/seoMapper";
 import Hero from "@/app/components/ResearchComponents/Hero";
 
 // ✅ Lazy load BELOW-THE-FOLD content
-const ResearchClient = dynamic(() => import("./ResearchClient"), {
-  ssr: false, // 🔥 huge LCP improvement
-});
+const ResearchClient = dynamic(() => import("./ResearchClient"));
 
 // ✅ CACHE (prevents duplicate API calls)
 const getResearchData = cache(async () => {
