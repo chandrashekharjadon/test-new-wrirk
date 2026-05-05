@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #bdbbbb;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #6c6c6c7a;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #55555574;
+  }
+}
+
+.services_card::-webkit-scrollbar {
+  display: none;
+}
+
+.background_test {
+  background: linear-gradient(142.13deg, rgba(195, 193, 195, 0.85) 1.8%, rgba(254, 248, 255, 0) 99.75%), radial-gradient(78.99% 95.57% at 17.38% 2.08%, rgba(255, 255, 255, 0.22) 0%, rgba(68, 74, 81, 0.1) 100%);
+}
+
+.pricing_bg {
+  background: linear-gradient(180deg, #DFE7E9 0%, #DAF2FF 100%);
+}
