@@ -1,6 +1,3 @@
-"use client";
-
-import React, { memo } from "react";
 import Image from "next/image";
 
 const DynamicPageClient = ({ data }) => {
@@ -45,7 +42,6 @@ const DynamicPageClient = ({ data }) => {
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover rounded-lg"
-                    loading="lazy"
                   />
                 </div>
               )}
@@ -65,9 +61,10 @@ const DynamicPageClient = ({ data }) => {
                     src={imageUrl}
                     alt={item.file_alt || "image"}
                     fill
+                    quality={400}
+                    loading="lazy"
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover rounded-lg"
-                    loading="lazy"
                   />
                 </div>
               )}
@@ -79,4 +76,4 @@ const DynamicPageClient = ({ data }) => {
   );
 };
 
-export default memo(DynamicPageClient);
+export default DynamicPageClient;

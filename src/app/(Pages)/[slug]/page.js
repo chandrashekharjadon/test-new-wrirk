@@ -1,11 +1,12 @@
-import { Suspense, cache } from "react";
+import { cache } from "react";
 import { fetchSeo } from "@/app/lib/seo";
 import { mapSeoToMetadata } from "@/app/lib/seoMapper";
+
 import DynamicPageClient from "./DynamicPageClient";
 import DynamicPageSkeleton from "./DynamicPageSkeleton";
 
-// ✅ Cache API (prevents duplicate calls)
-const getPageData = cache(async (slug) => {
+// ✅ Cache API
+const getPageData = cache((slug) => {
   return fetchSeo(`pages/${slug}`);
 });
 
@@ -15,24 +16,19 @@ export async function generateMetadata({ params }) {
   return mapSeoToMetadata(data?.seo);
 }
 
-// ✅ Page
-export default function DynamicPage({ params }) {
-  return (
-    <Suspense fallback={<DynamicPageSkeleton />}>
-      <DynamicPageData slug={params.slug} />
-    </Suspense>
-  );
-}
+// ✅ Page (NO Suspense needed here)
+export default async function DynamicPage({ params }) {
+  const data = await getPageData(params.slug);
 
-// ✅ Data layer
-async function DynamicPageData({ slug }) {
-  const data = await getPageData(slug);
+  if (!data) {
+    return <DynamicPageSkeleton />;
+  }
 
   const schema = data?.seo?.schema_json;
 
   return (
     <>
-      {/* ✅ Schema JSON */}
+      {/* SEO SCHEMA */}
       {schema && (
         <script
           type="application/ld+json"
@@ -42,6 +38,7 @@ async function DynamicPageData({ slug }) {
         />
       )}
 
+      {/* CLIENT COMPONENT */}
       <DynamicPageClient data={data} />
     </>
   );
