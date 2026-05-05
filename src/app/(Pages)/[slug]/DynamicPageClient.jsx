@@ -61,7 +61,7 @@ const DynamicPageClient = ({ data }) => {
                     src={imageUrl}
                     alt={item.file_alt || "image"}
                     fill
-                    quality={400}
+                    quality={40}
                     loading="lazy"
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover rounded-lg"
