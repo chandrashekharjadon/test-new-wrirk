@@ -45,7 +45,7 @@ const ResearchCard = ({
             alt={image_alt || "research image"}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
-            quality={70} // 🔥 reduce size
+            quality={60} // 🔥 reduce size
             className="object-cover rounded-xl"
             loading="lazy"
           />

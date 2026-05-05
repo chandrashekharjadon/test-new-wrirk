@@ -1,6 +1,4 @@
-"use client";
-
-import React, { memo } from "react";
+import React from "react";
 import Image from "next/image";
 
 const Hero = ({ data }) => {
@@ -34,8 +32,8 @@ const Hero = ({ data }) => {
               height={600}
               priority
               sizes="(max-width: 1024px) 100vw, 55vw" // 🔥 CRITICAL FIX
-              quality={70} // 🔥 reduce payload
-              className="w-full h-auto lg:w-[55vw] lg:h-[32vw]"
+              quality={60} // 🔥 reduce payload
+              className="w-full h-auto max-w-[600px]"
             />
           )}
         </div>
@@ -44,4 +42,4 @@ const Hero = ({ data }) => {
   );
 };
 
-export default memo(Hero);
+export default Hero;

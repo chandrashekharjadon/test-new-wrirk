@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ResearchCard from "@/app/components/ResearchComponents/ResearchCard";
 import "@fontsource/poppins/600.css";
 import { IoSearchOutline } from "react-icons/io5";
@@ -14,47 +14,44 @@ const ResearchCardContainer = ({ data }) => {
   const cardsPerPage = 6;
   const cards = data || [];
 
-  /* 🔥 DEBOUNCE (IMPORTANT) */
+  /* ✅ DEBOUNCE (keep this) */
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearch(searchTerm);
+      setDebouncedSearch(searchTerm.trim().toLowerCase());
     }, 300);
 
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  /* 🔎 FILTER */
-  const filteredCards = useMemo(() => {
-    if (!debouncedSearch) return cards;
+  /* ✅ FILTER (simple, no useMemo) */
+  const filteredCards = !debouncedSearch
+    ? cards
+    : cards.filter((item) =>
+        item?.title?.toLowerCase().includes(debouncedSearch)
+      );
 
-    const term = debouncedSearch.toLowerCase();
-
-    return cards.filter((item) =>
-      item?.title?.toLowerCase().includes(term)
-    );
-  }, [cards, debouncedSearch]);
-
-  /* 📄 PAGINATION */
-  const currentCards = useMemo(() => {
-    const start = (currentPage - 1) * cardsPerPage;
-    return filteredCards.slice(start, start + cardsPerPage);
-  }, [filteredCards, currentPage]);
+  /* ✅ PAGINATION (simple) */
+  const startIndex = (currentPage - 1) * cardsPerPage;
+  const currentCards = filteredCards.slice(
+    startIndex,
+    startIndex + cardsPerPage
+  );
 
   const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
 
-  /* ⚡ HANDLERS */
-  const handlePrev = useCallback(() => {
+  /* ✅ HANDLERS (no useCallback needed) */
+  const handlePrev = () => {
     setCurrentPage((p) => Math.max(p - 1, 1));
-  }, []);
+  };
 
-  const handleNext = useCallback(() => {
+  const handleNext = () => {
     setCurrentPage((p) => Math.min(p + 1, totalPages));
-  }, [totalPages]);
+  };
 
-  const handleSearch = useCallback((e) => {
+  const handleSearch = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1);
-  }, []);
+  };
 
   return (
     <div className="w-full">
