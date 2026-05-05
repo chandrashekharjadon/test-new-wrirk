@@ -1,5 +1,6 @@
 "use client";
 
+import React, { memo } from "react";
 import Image from "next/image";
 
 const DynamicPageClient = ({ data }) => {
@@ -26,8 +27,6 @@ const DynamicPageClient = ({ data }) => {
         {/* CONTENT */}
         {components.map((item, index) => {
           const isEven = index % 2 === 0;
-          const isFirstBlock = index === 0;
-
           const imageUrl = item?.attachment
             ? `${baseUrl}${item.attachment}`
             : null;
@@ -43,11 +42,10 @@ const DynamicPageClient = ({ data }) => {
                   <Image
                     src={imageUrl}
                     alt={item.file_alt || "image"}
-                    fill
-                    priority={isFirstBlock} // ✅ LCP FIX
-                    loading={isFirstBlock ? "eager" : "lazy"} // ✅ smart loading
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover rounded-lg"
+                    loading="lazy"
+                    quality={40}
                   />
                 </div>
               )}
@@ -67,10 +65,9 @@ const DynamicPageClient = ({ data }) => {
                     src={imageUrl}
                     alt={item.file_alt || "image"}
                     fill
-                    priority={isFirstBlock} // ✅ LCP FIX
-                    loading={isFirstBlock ? "eager" : "lazy"}
                     sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover rounded-lg"
+                    loading="lazy"
                   />
                 </div>
               )}
@@ -82,4 +79,4 @@ const DynamicPageClient = ({ data }) => {
   );
 };
 
-export default DynamicPageClient;
+export default memo(DynamicPageClient);

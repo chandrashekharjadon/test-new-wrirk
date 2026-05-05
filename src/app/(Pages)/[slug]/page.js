@@ -1,34 +1,38 @@
-import { cache, Suspense } from "react";
+import { Suspense, cache } from "react";
 import { fetchSeo } from "@/app/lib/seo";
 import { mapSeoToMetadata } from "@/app/lib/seoMapper";
-
 import DynamicPageClient from "./DynamicPageClient";
 import DynamicPageSkeleton from "./DynamicPageSkeleton";
 
-// ✅ Cache API (with ISR support if fetchSeo supports it)
+// ✅ Cache API (prevents duplicate calls)
 const getPageData = cache(async (slug) => {
   return fetchSeo(`pages/${slug}`);
 });
 
-// ✅ Metadata (still cached automatically)
+// ✅ Metadata
 export async function generateMetadata({ params }) {
   const data = await getPageData(params.slug);
   return mapSeoToMetadata(data?.seo);
 }
 
-// ✅ Wrapper (separate async component)
-async function DynamicPageWrapper({ slug }) {
-  const data = await getPageData(slug);
+// ✅ Page
+export default function DynamicPage({ params }) {
+  return (
+    <Suspense fallback={<DynamicPageSkeleton />}>
+      <DynamicPageData slug={params.slug} />
+    </Suspense>
+  );
+}
 
-  if (!data) {
-    return <DynamicPageSkeleton />;
-  }
+// ✅ Data layer
+async function DynamicPageData({ slug }) {
+  const data = await getPageData(slug);
 
   const schema = data?.seo?.schema_json;
 
   return (
     <>
-      {/* SEO SCHEMA */}
+      {/* ✅ Schema JSON */}
       {schema && (
         <script
           type="application/ld+json"
@@ -40,14 +44,5 @@ async function DynamicPageWrapper({ slug }) {
 
       <DynamicPageClient data={data} />
     </>
-  );
-}
-
-// ✅ Main Page (NON-BLOCKING now 🚀)
-export default function DynamicPage({ params }) {
-  return (
-    <Suspense fallback={<DynamicPageSkeleton />}>
-      <DynamicPageWrapper slug={params.slug} />
-    </Suspense>
   );
 }
