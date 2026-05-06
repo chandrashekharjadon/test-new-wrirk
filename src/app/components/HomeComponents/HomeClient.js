@@ -1,5 +1,3 @@
-"use client";
-
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
@@ -17,7 +15,7 @@ const GetStarted = dynamic(() => import("@/app/components/HomeComponents/GetStar
 const Testimonials = dynamic(() => import("@/app/components/HomeComponents/Testimonials"));
 const Contact = dynamic(() => import("@/app/components/ContactusComponents/Contact"));
 
-const HomeClient = ({ data }) => {
+const HomeClient = ({ data, areas, domains }) => {
   const { home_page, contact } = data || {};
 
   return (
@@ -54,7 +52,7 @@ const HomeClient = ({ data }) => {
       </Suspense>
 
       <Suspense fallback={<CardSkeleton />}>
-        <Contact data={contact} />
+        <Contact data={contact} areas={areas} domains={domains} />
       </Suspense>
 
     </div>

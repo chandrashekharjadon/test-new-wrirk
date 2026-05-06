@@ -1,6 +1,7 @@
 import { Suspense, cache } from "react";
 import HomeClient from "@/app/components/HomeComponents/HomeClient";
 import { fetchSeo } from "@/app/lib/seo";
+import { fetchAreas, fetchDomains } from "@/app/lib/contactApi";
 import { mapSeoToMetadata } from "@/app/lib/seoMapper";
 import HomeSkeleton from "./HomeSkeleton";
 
@@ -8,6 +9,10 @@ import HomeSkeleton from "./HomeSkeleton";
 const getHomeData = cache(async () => {
   return fetchSeo("home");
 });
+
+// ✅ Cache APIs (same as Contact page)
+const getAreas = cache(fetchAreas);
+const getDomains = cache(fetchDomains);
 
 // ✅ Metadata (uses cached data)
 export async function generateMetadata() {
@@ -26,7 +31,11 @@ export default function HomePage() {
 
 // ✅ Server Component
 async function HomeData() {
-  const data = await getHomeData();
+  const [data, areas, domains] = await Promise.all([
+    getHomeData(),
+    getAreas(),
+    getDomains(),
+  ]);
 
   return (
     <>
@@ -40,7 +49,12 @@ async function HomeData() {
         />
       )}
 
-      <HomeClient data={data} />
+     {/* ✅ PASS DATA */}
+      <HomeClient
+        data={data}
+        areas={areas}
+        domains={domains}
+      />
     </>
   );
 }

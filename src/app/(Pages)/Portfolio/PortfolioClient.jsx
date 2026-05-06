@@ -5,7 +5,7 @@ import Hero from "@/app/components/PortfolioComponents/Hero";
 import PortCardSection from "@/app/components/PortfolioComponents/PortCardSection";
 import Contact from "@/app/components/ContactusComponents/Contact";
 
-const PortfolioClient = ({ portfolio, contact }) => {
+const PortfolioClient = ({ portfolio, contact, areas, domains }) => {
   // 🚀 no loading check here (Suspense handles it)
 
   if (!portfolio) {
@@ -26,7 +26,7 @@ const PortfolioClient = ({ portfolio, contact }) => {
         data={portfolio?.portfolio_cards || []}
       />
 
-      <Contact data={contact} />
+      <Contact data={contact} areas={areas} domains={domains} />
 
     </div>
   );
