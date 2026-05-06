@@ -1,11 +1,11 @@
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
-// ✅ Skeletons
+// Skeletons
 import CardSkeleton from "@/app/components/Skeletons/CardSkeleton";
 import HeroSkeleton from "@/app/components/Skeletons/HeroSkeleton";
 
-// ✅ Lazy load sections
+// Lazy load (Server-friendly)
 const Hero = dynamic(() => import("@/app/components/HomeComponents/Hero"));
 const WhatweServe = dynamic(() => import("@/app/components/HomeComponents/WhatweServe"));
 const ResearchCategory = dynamic(() => import("@/app/components/HomeComponents/ResearchCategory"));
@@ -15,18 +15,15 @@ const GetStarted = dynamic(() => import("@/app/components/HomeComponents/GetStar
 const Testimonials = dynamic(() => import("@/app/components/HomeComponents/Testimonials"));
 const Contact = dynamic(() => import("@/app/components/ContactusComponents/Contact"));
 
-const HomeClient = ({ data, areas, domains }) => {
+export default function HomeClient({ data, areas, domains }) {
   const { home_page, contact } = data || {};
 
   return (
     <div>
-
-      {/* 🔥 Fast first paint */}
       <Suspense fallback={<HeroSkeleton />}>
         <Hero data={home_page} />
       </Suspense>
 
-      {/* 🔽 Progressive loading */}
       <Suspense fallback={<CardSkeleton />}>
         <WhatweServe data={home_page} />
       </Suspense>
@@ -54,9 +51,6 @@ const HomeClient = ({ data, areas, domains }) => {
       <Suspense fallback={<CardSkeleton />}>
         <Contact data={contact} areas={areas} domains={domains} />
       </Suspense>
-
     </div>
   );
-};
-
-export default HomeClient;
+}

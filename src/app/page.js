@@ -5,7 +5,7 @@ import { fetchAreas, fetchDomains } from "@/app/lib/contactApi";
 import { mapSeoToMetadata } from "@/app/lib/seoMapper";
 import HomeSkeleton from "./HomeSkeleton";
 
-// ✅ CACHE (prevents duplicate API calls)
+// ✅ Cache SEO
 const getHomeData = cache(async () => {
   return fetchSeo("home");
 });
@@ -14,7 +14,7 @@ const getHomeData = cache(async () => {
 const getAreas = cache(fetchAreas);
 const getDomains = cache(fetchDomains);
 
-// ✅ Metadata (uses cached data)
+// ✅ Metadata
 export async function generateMetadata() {
   const data = await getHomeData();
   return mapSeoToMetadata(data?.home_page?.seo);
@@ -29,7 +29,7 @@ export default function HomePage() {
   );
 }
 
-// ✅ Server Component
+// ✅ Server Component (UPDATED)
 async function HomeData() {
   const [data, areas, domains] = await Promise.all([
     getHomeData(),
@@ -49,7 +49,7 @@ async function HomeData() {
         />
       )}
 
-     {/* ✅ PASS DATA */}
+      {/* ✅ PASS DATA */}
       <HomeClient
         data={data}
         areas={areas}
