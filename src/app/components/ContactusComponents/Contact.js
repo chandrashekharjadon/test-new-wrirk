@@ -1,14 +1,18 @@
 "use client";
 
-import React, { useState, useCallback, memo } from "react";
+import React, { useState, useCallback, useEffect, memo } from "react";
 import { useRouter } from "next/navigation";
 import { RiPhoneLine, RiMapPinFill } from "react-icons/ri";
 import { MdEmail } from "react-icons/md";
 import Image from "next/image";
 
-const Contact = ({ data, areas = [], domains = [] }) => {
+const Contact = ({ data, areas: initialAreas = [], domains: initialDomains = [] }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  // ✅ NEW: local state (fallback support)
+  const [areas, setAreas] = useState(initialAreas);
+  const [domains, setDomains] = useState(initialDomains);
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -19,6 +23,30 @@ const Contact = ({ data, areas = [], domains = [] }) => {
     research_domain: "",
     research_description: "",
   });
+
+  // ✅ NEW: fetch ONLY if missing
+  useEffect(() => {
+    if (initialAreas.length && initialDomains.length) return;
+
+    const fetchData = async () => {
+      try {
+        const [areasRes, domainsRes] = await Promise.all([
+          fetch(`https://repo.wrirk.com/api/research_areas`),
+          fetch(`https://repo.wrirk.com/api/domains`),
+        ]);
+
+        const areasData = await areasRes.json();
+        const domainsData = await domainsRes.json();
+
+        setAreas(areasData || []);
+        setDomains(domainsData || []);
+      } catch (err) {
+        console.error("Dropdown fetch error:", err);
+      }
+    };
+
+    fetchData();
+  }, [initialAreas, initialDomains]);
 
   // ✅ Change handler
   const handleChange = (e) => {
@@ -74,8 +102,6 @@ const Contact = ({ data, areas = [], domains = [] }) => {
     [formData, router]
   );
 
-  // ❌ REMOVED loading + error block (IMPORTANT)
-
   return (
     <div>
       <div className="w-full grid md:grid-cols-3 grid-cols-1 lg:px-20 md:px-6 px-3 pt-10 pb-16">
@@ -106,7 +132,6 @@ const Contact = ({ data, areas = [], domains = [] }) => {
               </li>
             </ul>
 
-            {/* SOCIAL */}
             <div className="flex gap-4 py-2">
               {data?.social_links?.map((item, index) => (
                 <div
@@ -118,7 +143,6 @@ const Contact = ({ data, areas = [], domains = [] }) => {
               ))}
             </div>
 
-            {/* IMAGE */}
             <div className="absolute right-0 bottom-0 left-[140px] flex overflow-hidden">
               <Image
                 className="rounded-br-lg"
@@ -140,7 +164,6 @@ const Contact = ({ data, areas = [], domains = [] }) => {
 
           <form onSubmit={handleSubmit}>
 
-            {/* SAME UI (unchanged) */}
             {/* NAME */}
             <div className="grid lg:grid-cols-2 gap-x-7">
               <div className="mb-4 p-2">

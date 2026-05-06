@@ -10,10 +10,6 @@ const getHomeData = cache(async () => {
   return fetchSeo("home");
 });
 
-// ✅ Cache APIs (same as Contact page)
-const getAreas = cache(fetchAreas);
-const getDomains = cache(fetchDomains);
-
 // ✅ Metadata
 export async function generateMetadata() {
   const data = await getHomeData();
@@ -31,10 +27,8 @@ export default function HomePage() {
 
 // ✅ Server Component (UPDATED)
 async function HomeData() {
-  const [data, areas, domains] = await Promise.all([
+  const [data] = await Promise.all([
     getHomeData(),
-    getAreas(),
-    getDomains(),
   ]);
 
   return (
@@ -52,8 +46,6 @@ async function HomeData() {
       {/* ✅ PASS DATA */}
       <HomeClient
         data={data}
-        areas={areas}
-        domains={domains}
       />
     </>
   );

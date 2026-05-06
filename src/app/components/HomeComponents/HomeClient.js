@@ -15,7 +15,7 @@ const GetStarted = dynamic(() => import("@/app/components/HomeComponents/GetStar
 const Testimonials = dynamic(() => import("@/app/components/HomeComponents/Testimonials"));
 const Contact = dynamic(() => import("@/app/components/ContactusComponents/Contact"));
 
-export default function HomeClient({ data, areas, domains }) {
+export default function HomeClient({ data}) {
   const { home_page, contact } = data || {};
 
   return (
@@ -49,7 +49,7 @@ export default function HomeClient({ data, areas, domains }) {
       </Suspense>
 
       <Suspense fallback={<CardSkeleton />}>
-        <Contact data={contact} areas={areas} domains={domains} />
+        <Contact data={contact} />
       </Suspense>
     </div>
   );
