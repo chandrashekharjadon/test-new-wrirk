@@ -5,7 +5,6 @@ export async function fetchSeo(slug) {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL2}${slug}`,
       {
-        cache: "force-cache",
         next: { revalidate: 300 }, // ✅ better than no-store
       }
     );
