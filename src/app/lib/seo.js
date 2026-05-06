@@ -12,7 +12,6 @@ export async function fetchSeo(slug) {
     if (!res.ok) return null;
     
     const json = await res.json();
-
     // console.log('seodata', json);
 
     return json?.data ?? null;
