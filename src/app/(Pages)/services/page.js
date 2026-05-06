@@ -5,7 +5,7 @@ import { mapSeoToMetadata } from "@/app/lib/seoMapper";
 import Hero from "@/app/components/ResearchComponents/Hero";
 
 // ✅ ISR: Makes page static + revalidates every 5 min
-export const revalidate = 300;
+// export const revalidate = 300;
 
 // ✅ Lazy load BELOW-THE-FOLD content
 const ResearchClient = dynamic(() => import("./ResearchClient"));
